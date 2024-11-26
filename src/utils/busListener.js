@@ -37,21 +37,8 @@ async function startBusListener() {
       // });
       browser = await puppeteer.launch({
         // args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-        args: [
-          ...chromium.args,
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--single-process',
-          '--disable-gpu',
-        ],
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(
-          `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar` || '/usr/bin/google-chrome-stable'
-        ),
+        args: chromium.args,
+        executablePath: await chromium.executablePath,
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
       });
