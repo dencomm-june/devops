@@ -1,4 +1,5 @@
-const puppeteer = require('puppeteer');
+const chromium = require('@sparticuz/chromium-min');
+const puppeteer = require('puppeteer-core');
 const axios = require('axios');
 const { getIsRunning, setIsRunning } = require('./globalState'); 
 
@@ -20,19 +21,39 @@ async function startBusListener() {
       setIsRunning(true);
   
       // 브라우저 실행
+      // browser = await puppeteer.launch({
+      //     // headless 모드로 실행 (기본값이 true이므로 옵션을 생략해도 됩니다)
+      //     headless: true,
+      //     args: [
+      //       '--no-sandbox',
+      //       '--disable-setuid-sandbox',
+      //       '--disable-dev-shm-usage',
+      //       '--disable-accelerated-2d-canvas',
+      //       '--no-first-run',
+      //       '--no-zygote',
+      //       '--single-process',
+      //       '--disable-gpu',
+      //     ],
+      // });
       browser = await puppeteer.launch({
-          // headless 모드로 실행 (기본값이 true이므로 옵션을 생략해도 됩니다)
-          headless: true,
-          args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process',
-            '--disable-gpu',
-          ],
+        // args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+        args: [
+          ...chromium.args,
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process',
+          '--disable-gpu',
+        ],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(
+          `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+        ),
+        headless: chromium.headless,
+        ignoreHTTPSErrors: true,
       });
   
       // 새로운 페이지 열기
